@@ -66,24 +66,31 @@ int main (int argc, char **argv)
     /* Step 1.2: Fill the buffer with some data */
     init_data(p_buffer, BUF_LEN);
 
-
-
+    // Read file from command argument
     printf("Reading file: %s\n", argv[1]);
-    size_t png_read;
-    FILE *f = fopen(argv[1], "r");
+    FILE *f = fopen(argv[1], "rt");
     if (f == NULL) {
         return 1;
     }
-    png_read = fread(p_buffer, BUF_LEN, 1, f);
-    // data_IHDR_p *png_int;
-    int a[4];
-    for (int i = 0; i < 3; i++) {
-        a[i] = p_buffer[i+8];
-        printf("%d", a[i]);
-    }
-
-    printf("%u\n", p_buffer[11]);
+    // Fill buffer with file data
+    fread(p_buffer, BUF_LEN, 1, f);
     fclose(f);
+
+    unsigned int width;
+    unsigned int height;
+    for (int i = 0; i < 4; i++) {
+        if (i == 0) {
+            width = p_buffer[i+16] << 8 | p_buffer[i+17];
+            height = p_buffer[i+20] << 8 | p_buffer[i+21];
+        } else {
+            width = width << 8 | p_buffer[i+16];
+            height = height << 8 | p_buffer[i+20];
+        }
+    }
+    // data_IHDR_p *png_int = malloc(sizeof(data_IHDR_p)); 
+
+    printf("Width: %dpx\n", width);
+    printf("Height: %dpx\n", height);
 
     /* Step 2: Demo how to use zlib utility */
     ret = mem_def(gp_buf_def, &len_def, p_buffer, BUF_LEN, Z_DEFAULT_COMPRESSION);

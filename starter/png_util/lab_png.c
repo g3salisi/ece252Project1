@@ -3,20 +3,19 @@
 
 
 int is_png(U8 *buf, size_t n) {
-    /*  */
-    char buf_string[256];
-    char n_string[256];
+    // take in a pointer to the value you want to check, check it with n 
+    unsigned int header;
+
     for (int i; i < 7; i++) {
-        char t
-  _string;      strcat()
+        header += (buf[i] << 8 | (7-i);
     }
+    printf("PNG header concat is %u \n", header);
 
-
-    if (n == 137 80 78 71 13 10 26 10) {
-        return 1;
-    } else {
-        return 0;
-    }
+    // if (n == header) {
+    //     return 1;
+    // } else {
+    //     return 0;
+    // }
 
     return 0;
 }

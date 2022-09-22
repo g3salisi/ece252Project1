@@ -53,6 +53,7 @@ int main (int argc, char **argv)
     int ret = 0;          /* return value for various routines             */
     U64 len_def = 0;      /* compressed data length                        */
     U64 len_inf = 0;      /* uncompressed data length                      */
+
     
     /* Step 1: Initialize some data in a buffer */
     /* Step 1.1: Allocate a dynamic buffer */
@@ -64,6 +65,25 @@ int main (int argc, char **argv)
 
     /* Step 1.2: Fill the buffer with some data */
     init_data(p_buffer, BUF_LEN);
+
+
+
+    printf("Reading file: %s\n", argv[1]);
+    size_t png_read;
+    FILE *f = fopen(argv[1], "r");
+    if (f == NULL) {
+        return 1;
+    }
+    png_read = fread(p_buffer, BUF_LEN, 1, f);
+    // data_IHDR_p *png_int;
+    int a[4];
+    for (int i = 0; i < 3; i++) {
+        a[i] = p_buffer[i+8];
+        printf("%d", a[i]);
+    }
+
+    printf("%u\n", p_buffer[11]);
+    fclose(f);
 
     /* Step 2: Demo how to use zlib utility */
     ret = mem_def(gp_buf_def, &len_def, p_buffer, BUF_LEN, Z_DEFAULT_COMPRESSION);
